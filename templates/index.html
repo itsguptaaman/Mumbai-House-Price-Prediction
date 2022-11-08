@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mumbai House Price</title>
+    <link href="/static/css/index.css" rel="stylesheet" >
+  </head>
+  <body class="bg-dark">
+    <div class="container">
+      <div class="row">
+        <div class="card" style="width:100%; height:100%; margin-top:50px;">
+          <div class="card-header" style="text-align: center">
+            <h1>Welcome to house price predictor</h1>
+          </div>
+          <div class="card-body">
+              <form method="post" accept-charset="utf-8">
+                  <div class="row">
+                    <div class="col-md-6 form-group"style="text-align:center">
+                      <label><b>Select the Location</b></label>
+                      <select class="selectpicker form-control" id="location" name="location" required="1">
+                        {% for i in location %}
+                            <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                      </select>
+                    </div>
+                    <div class="col-md-6 form-group"style="text-align:center">
+                      <label><b>Enter Area</b></label>
+                      <input type="text" class="form-control" id="area" name="area" placeholder="Enter the area">
+                    </div>
+                    <div class="mt-4"></div>
+                    <div class="col-md-6 form-group"style="text-align:center">
+                      <label><b>Enter the No. of BHK</b></label>
+                      <input type="text" class="form-control" id="bhk" name="bhk" placeholder="Enter the No. of BHK">
+                    </div>
+                    <div class="col-md-6 form-group"style="text-align:center">
+                      <label><b>Car Parking</b></label>
+                      <input type="text" class="form-control" id="car" name="car" placeholder="Yes or No">
+                    </div>
+                    <div class="mt-4"></div>
+                     <div class="col-md-10 form-group" style="text-align: center">
+                        <button  class="btn btn-primary form-control" onclick="send_data()">Predict Price</button>
+                    </div>
+                    <div class="mt-4"></div>
+                    <div class="mt-4"></div>
+                  </div>
+              </form>
+              <br>
+              <div class="col-md-12" style="text-align: center"></div>
+              <h3 style="text-align: center"><span id="prediction" ></span></h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function form_handler(event){
+        event.preventDefault(); //Do not submit the form normally
+      }
+
+      function send_data()
+      {
+        document.querySelector('form').addEventListener('submit',form_handler);
+        var fd=new FormData(document.querySelector('form'));
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST','/predict', 'true');
+        document.getElementById("prediction").innerHTML="Wait Predicting the House Price..!"
+        xhr.onreadystatechange = function(){
+          if(xhr.readyState == XMLHttpRequest.DONE){
+            document.getElementById('prediction').innerHTML="Prediction: ₹"+xhr.responseText;
+          }
+        };
+        xhr.onload = function(){};
+        xhr.send(fd);
+      }
+    </script>
+  </body>
+</html>
